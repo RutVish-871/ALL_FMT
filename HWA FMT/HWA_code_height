@@ -1,0 +1,34 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Step 1: Read data from file
+# Replace 'velocity_voltage.csv' with the path to your actual file
+data = pd.read_csv('Velocity_voltage.csv')
+# Step 2: Extract x (velocity) and y (voltage) columns
+# Assuming the file has columns 'velocity' and 'voltage'
+x = data['velocity'].values
+y = data['voltage'].values
+
+# Step 3: Choose the degree of the polynomial
+degree = 2  # You can change this to your desired degree
+
+# Step 4: Fit a polynomial to the data
+coefficients = np.polyfit(x, y, degree)
+
+# Step 5: Create a polynomial function from the coefficients
+polynomial = np.poly1d(coefficients)
+
+# Step 6: Generate x values for plotting the fitted curve
+x_fit = np.linspace(min(x), max(x), 100)
+y_fit = polynomial(x_fit)
+
+# Step 7: Plot the original data and the fitted polynomial
+plt.scatter(x, y, color='red', label='Data')  # Plot original data points
+plt.plot(x_fit, y_fit, label=f'{degree} degree polynomial')  # Plot fitted curve
+plt.xlabel('Velocity')
+plt.ylabel('Voltage')
+plt.legend()
+plt.title('Polynomial Fit to Velocity vs Voltage')
+plt.grid(True)
+plt.show()
