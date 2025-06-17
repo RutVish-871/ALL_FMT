@@ -1,0 +1,12 @@
+// set file <F:/FMT/PIV_DaVIS/RAW DATA.set> created by DaVis 8.4.0 at 14.05.25 17:38:17
+
+#GROUP Sets
+SetType = 16384;
+SetGroups = "";
+SetTime = "Wed May 14 17:38:17 25";
+SetComments = "";
+SetStart = 1;
+SetInc = 1;
+SetSourceSet = "";
+SetViewCallback = "";
+SetLoadCallback = "";
