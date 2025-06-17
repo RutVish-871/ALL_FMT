@@ -2,19 +2,31 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+import os
+
+os.chdir("C:/Users/phili/OneDrive/Documenten/GitHub/ALL_FMT/HWA FMT")
+
+
+print("printing current working directory", os.getcwd())
+
+
 # Step 1: Read data from file
 # Replace 'velocity_voltage.csv' with the path to your actual file
-data = pd.read_csv('Velocity_voltage.csv')
-# Step 2: Extract x (velocity) and y (voltage) columns
-# Assuming the file has columns 'velocity' and 'voltage'
-x = data['velocity'].values
-y = data['voltage'].values
+data = pd.read_csv('Velocity_voltage.txt', header=None, delim_whitespace=True)
+
+data_subset = data.iloc[11:22]  # Select the first 100 rows and first two columns
+
+x = data_subset[0].values
+y = data_subset[1].values
 
 # Step 3: Choose the degree of the polynomial
-degree = 2  # You can change this to your desired degree
+degree = 4  # You can change this to your desired degree
 
 # Step 4: Fit a polynomial to the data
 coefficients = np.polyfit(x, y, degree)
+
+print("Coefficients of the polynomial:", coefficients)
 
 # Step 5: Create a polynomial function from the coefficients
 polynomial = np.poly1d(coefficients)
