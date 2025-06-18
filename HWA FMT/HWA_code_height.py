@@ -1,39 +1,46 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
-
 import os
 
-os.chdir("C:/Users/phili/OneDrive/Documenten/GitHub/ALL_FMT/HWA FMT")
+os.chdir(os.path.dirname(__file__))
 
+def getAverage(x, y):
+    x_new = []
+    y_new = []
+    for i in range(len(x)):
+        for j in range(i+1,len(x)):
+            if(np.abs(x[i]-x[j])<0.1):
+                temp = np.sqrt(np.mean([x[i]**2, x[j]**2]))     # RMS value of Velocity
+                x_new.append(temp)
 
-print("printing current working directory", os.getcwd())
+                temp = np.mean([y[i], y[j]])                    # Mean value of Voltage
+                y_new.append(temp)
 
+    return x_new, y_new
 
 # Step 1: Read data from file
-# Replace 'velocity_voltage.csv' with the path to your actual file
-data = pd.read_csv('Velocity_voltage.txt', header=None, sep='\s+')
+data = pd.read_csv('Velocity_voltage.txt', header=None, names = ['vel', 'volt'], sep='\s+')
 
-data_subset = data.iloc[11:22]  # Select the first 100 rows and first two columns
+x = data['vel'][:]
+y = data['volt'][:]
 
-y = data_subset[0].values
-x = data_subset[1].values
+x, y = getAverage(x, y)
 
 # Step 3: Choose the degree of the polynomial
-degree = 4  # You can change this to your desired degree
+degree = 4
 
 # Step 4: Fit a polynomial to the data
-coefficients = np.polyfit(x, y, degree)
+coefficients = np.polyfit(y, x, degree)
 
-print("Coefficients of the polynomial:", coefficients)
+print("Coefficients of the polynomial: ", coefficients)
 
 # Step 5: Create a polynomial function from the coefficients
 polynomial = np.poly1d(coefficients)
 
 # Step 6: Generate x values for plotting the fitted curve
-x_fit = np.linspace(min(x), max(x), 100)
-y_fit = polynomial(x_fit)
+y_fit = np.linspace(min(y), max(y), 100)
+x_fit = polynomial(y_fit)
 
 heights = []
 means_A0 = []
@@ -73,6 +80,7 @@ for i in range(9, 90, 4):  # Start at 9, end at 89, with a step of 4
 
 
 # Step 7: Plot the original data and the fitted polynomial
+plt.figure("Voltage Velocity Correlation Curve")
 plt.scatter(x, y, color='red', label='Data')  # Plot original data points
 plt.plot(x_fit, y_fit, label=f'{degree} degree polynomial')  # Plot fitted curve
 plt.xlabel('Velocity')
@@ -80,9 +88,8 @@ plt.ylabel('Voltage')
 plt.legend()
 plt.title('Polynomial Fit to Velocity vs Voltage')
 plt.grid(True)
-plt.show()
 
-
+plt.figure("Mean Velocity")
 plt.plot(means_A0_mapped, heights, label='Mapped Mean', marker='o')
 plt.xlabel('Height (cm)')
 plt.ylabel('Mapped Mean of A0')
