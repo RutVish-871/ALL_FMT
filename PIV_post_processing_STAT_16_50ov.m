@@ -40,17 +40,25 @@ end
 
 figure(1)
 contourf(X,Y,V_mean_mag,50,'LineColor','none');
-xlabel("$x$(m)", Interpreter="latex")
-ylabel("$y$(m)", Interpreter="latex")
-title('Mean Velocity Magnitude ($m/s$)' , Interpreter="latex")
 colormap("jet")
+a=6;
+set(gcf, 'Units','Normalized' , "Position", [0.2, 0.2, a*0.1, a*0.1]);
+xlabel('$x $ (mm)', Interpreter='latex', FontSize=15);
+ylabel('$y $ (mm)', Interpreter='latex', FontSize=15);
+title('Mean Velocity', Interpreter='latex', FontSize=15)
 c = colorbar;
-c.Label.String = 'Velocity m/s';
+c.Label.String = 'Velocity magnitude (m/s)';
+c.Label.FontSize = 12;
+c.Label.Interpreter = "latex";
+
+
 
 figure(2)
 contourf(X,Y,SNR,50,'LineColor','none');
-xlabel("$x$(m)", Interpreter="latex")
-ylabel("$y$(m)", Interpreter="latex")
-title('Signal-Noise Ratio' , Interpreter="latex")
 colormap("jet")
-colorbar
+a=6;
+set(gcf, 'Units','Normalized' , "Position", [0.2, 0.2, a*0.1, a*0.1]);
+xlabel('$x $ (mm)', Interpreter='latex', FontSize=15);
+ylabel('$y $ (mm)', Interpreter='latex', FontSize=15);
+title('Signal-to-Noise Ratio', Interpreter='latex', FontSize=15)
+c = colorbar;

@@ -31,10 +31,16 @@ end
 figure(1);
 hold on
 contourf(X,Y,mag_davis,50,'LineColor','none');
-c = colorbar;
-c.Label.String = 'Velocity magnitude ($m/s$)';
+
 colormap(jet)
 quiver(x,y,Vx,Vy, 'Color','k');
-xlabel('$x$ (mm)', Interpreter='latex');
-ylabel('$y$ (mm)', Interpreter='latex');
-title('Velocity contours with Vectors', Interpreter='latex')
+
+a=6;
+set(gcf, 'Units','Normalized' , "Position", [0.2, 0.2, a*0.1, a*0.1]);
+xlabel('$x $ (mm)', Interpreter='latex', FontSize=15);
+ylabel('$y $ (mm)', Interpreter='latex', FontSize=15);
+title('Velocity Contour and Vectors', Interpreter='latex', FontSize=15)
+c = colorbar;
+c.Label.String = 'Velocity magnitude (m/s)';
+c.Label.FontSize = 12;
+c.Label.Interpreter = "latex";
