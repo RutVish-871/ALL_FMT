@@ -46,7 +46,7 @@ polynomial = np.poly1d(coefficients)
 y_fit = np.linspace(min(y), max(y), 100)
 x_fit = polynomial(y_fit)
 
-## Plot the original data and the fitted polynomial
+# Plot the original data and the fitted polynomial
 plt.figure("Voltage Velocity Correlation Curve")
 plt.scatter(x, y, color='red', label='Data', s = 16)        # Plot original data points
 plt.plot(x_fit, y_fit, label=f'{degree} degree polynomial') # Plot fitted curve
@@ -130,7 +130,7 @@ for j in [0, 5, 15]:
         plt.plot(peak_freq, peak_val, 'ro', label=f'Peak: {peak_freq:.2f} Hz')
 
         plt.xlabel('Frequency [Hz]')
-        plt.ylabel('Power Spectral Density, $\phi_{uu}$ [W/Hz]')    
+        plt.ylabel('Power Spectral Density, $\phi_{uu}$ [m$^2$s$^{-2}$/Hz]')    
         plt.title("$\phi_{uu}$ at " + f"h = {i} mm " + f"for $\\alpha={j}$" + "$^{\\circ}$")
         plt.grid(True)
         plt.tight_layout()
@@ -159,7 +159,7 @@ for j in [0]:
             freq_fft, PSD = welch(vel, fs=freq, nperseg=nperseg, window='hann', scaling='density')
 
             ax.loglog(freq_fft, PSD, label=f'{nperseg}-point window')
-            ax.set_ylabel('$\\phi_{uu}$ [W/Hz]')
+            ax.set_ylabel('$\\phi_{uu}$ [m$^2$s$^{-2}$/Hz]')
             ax.grid(True)
             ax.legend(loc='upper right')
 
