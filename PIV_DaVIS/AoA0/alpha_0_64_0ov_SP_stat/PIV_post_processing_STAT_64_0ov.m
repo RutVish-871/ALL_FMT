@@ -15,21 +15,21 @@ std_y = table2(:,4);
 % figure(1);
 % quiver(x,y,Vx,Vy);
 
-X= reshape(x, 101, 78)';
-Y= reshape(y, 101, 78)';
-mean_x= reshape(mean_x, 101, 78)';
-mean_y= reshape(mean_y, 101, 78)';
-std_x= reshape(std_x, 101, 78)';
-std_y= reshape(std_y, 101, 78)';
-nan_val = reshape(nan, 101, 78)';
+X= reshape(x, 26, 20)';
+Y= reshape(y, 26, 20)';
+mean_x= reshape(mean_x, 26, 20)';
+mean_y= reshape(mean_y, 26, 20)';
+std_x= reshape(std_x, 26, 20)';
+std_y= reshape(std_y, 26, 20)';
+nan_val = reshape(nan, 26, 20)';
 
 V_mean_mag = sqrt(mean_x.^2 + mean_y.^2);
 std_mag = sqrt(std_x.^2 + std_y.^2);
 
 SNR = V_mean_mag./std_mag;
 
-for i=1:101
-    for j=1:78
+for i=1:26
+    for j=1:20
         if nan_val(j,i)==0
             SNR(j,i) = NaN;
             V_mean_mag(j,i) = NaN;
@@ -50,7 +50,6 @@ c = colorbar;
 c.Label.String = 'Velocity magnitude (m/s)';
 c.Label.FontSize = 12;
 c.Label.Interpreter = "latex";
-
 
 
 figure(2)
