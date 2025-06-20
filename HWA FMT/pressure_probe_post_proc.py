@@ -13,7 +13,7 @@ plt.rc('legend',fontsize=12)
 plt.rcParams['axes.labelsize'] = 12
 plt.rcParams['axes.titlesize'] = 15
 
-data = pd.read_csv('Pressure Probe/Pressure_probe_measurements.csv', header=0, names = ['x', 'y', 'u', 'v'], sep=',', na_values=' nan')
+data = pd.read_csv('Pressure Probe/Pressure_probe_measurements.txt', header=0, names = ['x', 'y', 'u', 'v'], sep=',', na_values=' nan')
 
 x = data['x'][:]    # x-coordinate [mm]
 y = data['y'][:]    # y-coordinate [mm]
@@ -25,12 +25,12 @@ v_tot = np.sqrt(np.power(u_vel,2) + np.power(v_vel,2))
 X, Y = np.meshgrid(x, y)
 U_vel = griddata((x, y), u_vel, (X, Y), method='linear')
 V_vel = griddata((x, y), v_vel, (X, Y), method='linear')
-V_tot = griddata((x, y), v_tot, (X, Y), method='nearest')
+V_tot = griddata((x, y), v_tot, (X, Y), method='linear')
 
 step = 1
 plt.figure(figsize=(9,4))
 
-contour = plt.contourf(X, Y, V_tot, levels=25, cmap='viridis')
+contour = plt.contourf(X, Y, V_tot, levels=100, cmap='viridis')
 cbar = plt.colorbar(contour)
 cbar.set_label('u [m/s]')
 
