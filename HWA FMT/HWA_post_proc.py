@@ -46,7 +46,7 @@ polynomial = np.poly1d(coefficients)
 y_fit = np.linspace(min(y), max(y), 100)
 x_fit = polynomial(y_fit)
 
-# Plot the original data and the fitted polynomial
+## Plot the original data and the fitted polynomial
 plt.figure("Voltage Velocity Correlation Curve")
 plt.scatter(x, y, color='red', label='Data', s = 16)        # Plot original data points
 plt.plot(x_fit, y_fit, label=f'{degree} degree polynomial') # Plot fitted curve
@@ -55,18 +55,16 @@ plt.ylabel('Voltage [V]')
 plt.legend()
 plt.title('Polynomial Fit to Velocity vs Voltage')
 plt.grid(True)
-plt.show()
+plt.close()
 
-# Get velocity profiles for each ALFA case
-heights = []
-means_A0 = []
-stds_A0 = []
-means_A0_mapped = []
-stds_A0_mapped = []
-
+## Get velocity profiles for each ALFA case
 for j in [0, 5, 15]:
+    heights = []
+    means_A0 = []
+    stds_A0 = []
+    means_A0_mapped = []
+    stds_A0_mapped = []
     for i in range(9, 90, 4):  # Start at 9, end at 89, with a step of 4
-        # Generate the filename dynamically
         file_name = f'A{j}/A{j}_p{i}.txt'
         
         try:
@@ -108,29 +106,67 @@ for j in [0, 5, 15]:
     plt.grid(True)
     plt.legend()
 
-    heights = []
-    means_A0 = []
-    stds_A0 = []
-    means_A0_mapped = []
-    stds_A0_mapped = []
-
-plt.show()
+plt.close('all')
 
 ## Power Spectral Density Graphs
+for j in [0, 5, 15]:
+    for i in range(9, 90, 4):
+        file_name = f'A{j}/A{j}_p{i}.txt'
+        data = pd.read_csv(file_name, header=None, names = ['time', 'vel'], sep='\s+')
+        t = data['time'][:]
+        vel = data['vel'][:]
+        dt = t[1]-t[0]
+        freq = 1/dt
 
-# for i in range(9, 90, 4):  # Start at 9, end at 89, with a step of 4
-#     # Generate the filename dynamically
-#     file_name = f'A0/A0_p{i}.txt'
-#     data = pd.read_csv(file_name, header=None, names = ['time', 'vel'], sep='\s+')
-#     t = data['time'][:]
-#     vel = data['vel'][:]
-#     dt = t[1]-t[0]
-#     freq = 1/dt
+        nperseg = 2048
+        freq_fft, PSD = welch(vel, fs=freq, nperseg=nperseg, window='hann', scaling='density')
 
-#     nperseg = 2048
-#     freq_fft, PSD = welch(vel, fs=freq, nperseg=nperseg, window='hann', scaling='density')
+        peak_index = np.argmax(PSD)
+        peak_freq = freq_fft[peak_index]
+        peak_val = PSD[peak_index]
+        
+        plt.figure(f"Power Spectral Density at h = {i} mm for A{j}", figsize=(8,3.5))
+        plt.loglog(freq_fft, PSD, label=f'{nperseg}-point window')
+        plt.plot(peak_freq, peak_val, 'ro', label=f'Peak: {peak_freq:.2f} Hz')
 
-#     plt.figure("Power Spectral Density")
-#     plt.loglog(freq_fft, PSD, label=f'{nperseg}-point window')
-#     plt.grid(True)
-#     plt.show()
+        plt.xlabel('Frequency [Hz]')
+        plt.ylabel('Power Spectral Density, $\phi_{uu}$ [W/Hz]')    
+        plt.title("$\phi_{uu}$ at " + f"h = {i} mm " + f"for $\\alpha={j}$" + "$^{\\circ}$")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.legend()
+
+        path_name = f'plots/A{j}/PSD_at_p{i}_for_A{j}.png'
+        plt.savefig(path_name)
+        plt.close()
+        # print(f"plot A{j}, {((i-9)/4)+1} done")
+
+## Variance with window size
+for j in [0]:
+    for i in range(41, 42, 4):
+        nperseg_list = [512, 1024, 2048, 4096]
+
+        file_name = f'A{j}/A{j}_p{i}.txt'
+        data = pd.read_csv(file_name, header=None, names=['time', 'vel'], sep='\s+')
+        t = data['time'][:]
+        vel = data['vel'][:]
+        dt = t[1] - t[0]
+        freq = 1 / dt
+
+        fig, axes = plt.subplots(len(nperseg_list), 1, figsize=(8, 2 * len(nperseg_list)), sharex=True)
+
+        for ax, nperseg in zip(axes, nperseg_list):
+            freq_fft, PSD = welch(vel, fs=freq, nperseg=nperseg, window='hann', scaling='density')
+
+            ax.loglog(freq_fft, PSD, label=f'{nperseg}-point window')
+            ax.set_ylabel('$\\phi_{uu}$ [W/Hz]')
+            ax.grid(True)
+            ax.legend(loc='upper right')
+
+        axes[-1].set_xlabel('Frequency [Hz]')
+        fig.suptitle("$\\phi_{uu}$ at " + f"h = {i} mm " + f"for $\\alpha={j}$" + "$^{\\circ}$", fontsize=14)
+        fig.tight_layout(rect=[0, 0, 1, 1])
+
+        path_name = f'plots/Window Size/PSD_STACKED_at_p{i}_for_A{j}_var_winsize.png'
+        plt.savefig(path_name)
+        plt.close()
